@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
   {
@@ -33,16 +35,26 @@ const userSchema = new mongoose.Schema(
       type: String,
       default:
         "https://www.pnrao.com/wp-content/uploads/2023/06/dummy-user-male.jpg",
-    validate(value) {
+      validate(value) {
         if (!validator.isURL(value)) {
-        throw new Error("Entered photo URL is not valid");
+          throw new Error("Entered photo URL is not valid");
         }
-    }
+      },
     },
     createdAt: { type: Date, default: Date.now },
     skills: { type: [String], default: [] },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    methods: {
+      getJWT: function () {
+        return  jwt.sign({ _id: this._id }, "HelloNode@1234",{expiresIn: "7d"}); // Generate JWT token with a 7-day expiration
+      },
+      comparePassword: function (password) {
+        return bcrypt.compare(password, this.password);
+      },
+    },
+  }
 );
 
 const User = mongoose.model("User", userSchema);

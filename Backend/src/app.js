@@ -2,9 +2,13 @@ const express = require("express");
 const { connectMongoDb } = require("./config/database");
 const bcrypt = require("bcrypt"); // Import bcrypt for password hashing if needed
 const User = require("./models/User"); // Assuming you have a User model defined
+const jwt = require("jsonwebtoken"); // Import jsonwebtoken for token generation if needed
+const cookieParser = require("cookie-parser"); // Import cookie-parser for handling cookies
+const authenticateUser = require("./middleware/userAuth"); // Import the user authentication middleware
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(cookieParser()); // Middleware to parse cookies from request headers
 
 app.post("/signup", async (req, res) => {
   // Handle user signup logic here
@@ -47,16 +51,33 @@ app.post("/login", async (req, res) => {
         }
         // Compare the provided password with the stored hashed password
         // Note: bcrypt.compare expects the plain text password and the hashed password
-        const passwordHash = await bcrypt.compare(password, user.password);
+        const passwordHash = await user.comparePassword(password);
         if(!passwordHash) {
             return res.status(401).json({ message: "Invalid credentials." });            
         }
         // If the password matches, return a success response
+        const jwtToken = await user.getJWT();
+        console.log("Generated JWT Token:", jwtToken); // Log the generated token for debugging
+        res.cookie("token", jwtToken,{
+            maxAge: 1 * 24 * 60 * 60 * 1000, // Set cookie expiration to 1 days
+        });
         res.status(200).json({ message: "Login successful!"});
         
     }
     catch (error) {
         console.error("Error in login route:", error);
+        res.status(500).json({ message: "Internal server error." + error.message });
+    }
+});
+
+app.get("/profile", authenticateUser, async (req, res) => {
+    try{          
+
+        res.status(200).json(req.user); // Return the user profile
+       
+    }
+    catch (error) {
+        console.error("Error fetching profile:", error);
         res.status(500).json({ message: "Internal server error." + error.message });
     }
 });

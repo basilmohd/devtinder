@@ -1,29 +1,31 @@
 const express = require("express");
 const { connectMongoDb } = require("./config/database");
+const bcrypt = require("bcrypt"); // Import bcrypt for password hashing if needed
 const User = require("./models/User"); // Assuming you have a User model defined
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
 
-app.post("/signup", (req, res) => {
+app.post("/signup", async (req, res) => {
   // Handle user signup logic here
   console.log("Received signup request:", req.body);
-  const user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    emailId: req.body.emailId,
-    password: req.body.password, // Make sure to hash the password before saving
-    age: req.body.age,
-    gender: req.body.gender,
-  });
+try {
+    const {firstName, lastName, emailId, password, age, gender} = req.body
 
-  try {
-    user
-      .save()
-      .then(() => {
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const user = new User({
+        firstName: firstName,
+        lastName: lastName,
+        emailId: emailId,
+        password: passwordHash, // Make sure to hash the password before saving
+        age: age,
+        gender: gender
+    });
+
+    user.save().then(() => {
         res.status(201).json({ message: "User signed up successfully!" });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         console.error("Error signing up user:", error);
         res.status(500).json({ message: "Error signing up user."+error.message });
       });
@@ -31,6 +33,32 @@ app.post("/signup", (req, res) => {
     console.error("Error in signup route:", error);
     res.status(500).json({ message: "Internal server error."+ error.message });
   }
+});
+
+app.post("/login", async (req, res) => {
+  // Handle user login logic here
+    try {
+        const { emailId, password } = req.body;
+    
+        // Find the user by email
+        const user = await User.findOne({ emailId: emailId });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        // Compare the provided password with the stored hashed password
+        // Note: bcrypt.compare expects the plain text password and the hashed password
+        const passwordHash = await bcrypt.compare(password, user.password);
+        if(!passwordHash) {
+            return res.status(401).json({ message: "Invalid credentials." });            
+        }
+        // If the password matches, return a success response
+        res.status(200).json({ message: "Login successful!"});
+        
+    }
+    catch (error) {
+        console.error("Error in login route:", error);
+        res.status(500).json({ message: "Internal server error." + error.message });
+    }
 });
 
 app.post("/user",async (req, res) => {

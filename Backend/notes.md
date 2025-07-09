@@ -5,4 +5,5 @@
 - schema validation by default only work on addition not updation
 - mongoose can have all the validation on the schema itself. (check schemaTypes in documentation)
 - install validator library. used for mulitple data validations like email, url, password . very useful for data sanitization
+- bcrypt library is a good one to use for password hashing and comparision
 - 

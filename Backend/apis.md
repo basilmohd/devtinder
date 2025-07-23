@@ -13,6 +13,6 @@ ConnectionRouter
 - POST /request/received/:status/:requestId
 
 UserRouter
-- GET user/connections
-- GET user/requests/received
-- GET user/feed
+- GET user/connections -- get all the connections for a user
+- GET user/requests/received -- connection request received by a user
+- GET user/feed -- all users who are not yet a connection nor any pending request nor self 

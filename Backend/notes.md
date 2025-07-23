@@ -6,4 +6,5 @@
 - mongoose can have all the validation on the schema itself. (check schemaTypes in documentation)
 - install validator library. used for mulitple data validations like email, url, password . very useful for data sanitization
 - bcrypt library is a good one to use for password hashing and comparision
-- 
+- building connection between 2 schemas (tables) using ref and populate
+- explore queries $nin $and $ne 

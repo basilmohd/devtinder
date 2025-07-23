@@ -5,12 +5,12 @@ const validator = require("validator");
 const ConnectionSchema = new schema({
     fromUserId: {
         type: schema.Types.ObjectId,
-        ref: "User",
+        ref: "User", //refrence to User model
         required: true,
     },
     toUserId: {
         type: schema.Types.ObjectId,
-        ref: "User",
+        ref: "User", //refrence to User model
         required: true,
     },
     status: {

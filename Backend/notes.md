@@ -8,3 +8,4 @@
 - bcrypt library is a good one to use for password hashing and comparision
 - building connection between 2 schemas (tables) using ref and populate
 - explore queries $nin $and $ne 
+- pagination - skip and limit

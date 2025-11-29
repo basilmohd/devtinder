@@ -7,8 +7,14 @@ const authRouter = require("./routes/authRouter"); // Import the authentication 
 const profileRouter = require("./routes/profileRouter"); // Import the profile routes
 const connectionRouter = require("./routes/connectionRouter"); // Import the connection routes
 const userRouter = require("./routes/userRouter"); // Import the user routes
+const cors = require("cors");
 
 const app = express();
+app.use(cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    credentials: true, // Allow cookies to be sent
+}));
+
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(cookieParser()); // Middleware to parse cookies from request headers
 

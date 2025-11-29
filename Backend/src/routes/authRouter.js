@@ -54,7 +54,7 @@ authRouter.post("/login", async (req, res) => {
         res.cookie("token", jwtToken,{
             maxAge: 1 * 24 * 60 * 60 * 1000, // Set cookie expiration to 1 days
         });
-        res.status(200).json({ message: "Login successful!"});
+        res.status(200).json(user);
         
     }
     catch (error) {

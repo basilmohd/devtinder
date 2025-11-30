@@ -1,8 +1,34 @@
+import axios from 'axios';
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { BASE_URL } from '../utils/constants';
+import { useNavigate } from 'react-router-dom';
+import { removeUser } from '../utils/userSlice';
+import { useDispatch } from 'react-redux';
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logout = () => {
+    // Implement logout functionality
+    console.log('Logout clicked');
+    axios.post(BASE_URL+'/logout', {}, { withCredentials: true })
+    .then((res) => {
+      if(res.status === 200){
+       dispatch(removeUser());
+       navigate('/login')
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  }
+
+  const editProfile = () => {
+    navigate('/profile');
+  }
 
   return (
     <div className="navbar bg-neutral shadow-sm">
@@ -27,13 +53,13 @@ const Navbar = () => {
                 tabIndex="-1"
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                 <li>
-                  <a className="justify-between">
+                  <a className="justify-between" onClick={editProfile}>
                     Profile
                     <span className="badge">New</span>
                   </a>
                 </li>
                 <li><a>Settings</a></li>
-                <li><a>Logout</a></li>
+                <li><a onClick={logout}>Logout</a></li>
               </ul>
             </div>
           </div>

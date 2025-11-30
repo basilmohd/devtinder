@@ -20,7 +20,9 @@
     - Refactor code to add constant file 
 
     - update body component to load the page calling userprofile service on initial load. if token is present then api should be success and feed page will load in page reload.
-    - 
+    - Logout feature implementation
+    - user feed page creation with user card
+    - Edit profile page creation with side by side card display
 
 Body
   - Navbar

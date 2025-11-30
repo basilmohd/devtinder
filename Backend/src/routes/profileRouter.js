@@ -19,6 +19,7 @@ profileRouter.get("/view", authenticateUser, async (req, res) => {
 profileRouter.patch("/update", authenticateUser, async (req, res) => {
   try {
     const user = req.user;
+    console.log("Update request body:", req.body); // Log the request body for debugging
     const ALLOWED_UPDATES = [
       "firstName",
       "lastName",
@@ -41,7 +42,10 @@ profileRouter.patch("/update", authenticateUser, async (req, res) => {
       runValidators: true, // This will ensure that the update respects the schema validation
     });
 
-    res.status(200).json({ message: "User updated successfully!" });
+    res.status(200).json({ 
+      message: "User updated successfully!" ,
+      data: req.body
+    });
 
   } catch (error) {
     console.error("Error updating profile:", error);

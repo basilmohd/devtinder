@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { BASE_URL } from '../utils/constants';
 import { addUser } from '../utils/userSlice';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Body = () => {
@@ -15,21 +14,22 @@ const Body = () => {
     const userStore = useSelector((state) => state.user);
 
     const getUserFeed = async () => {
-        const res = await axios.get(BASE_URL + '/profile/view', { withCredentials: true });
         try {
+            const res = await axios.get(BASE_URL + '/profile/view', { withCredentials: true });
+
             if (res && res.data) {
                 dispatch(addUser(res.data))
             }
         }
         catch (err) {
             console.error(err);
-            if(err.status === 401)
+            if (err.status === 401)
                 navigate('/login');
         }
     }
 
     useEffect(() => {
-        if(!userStore)
+        if (!userStore)
             getUserFeed();
     }, []);
 

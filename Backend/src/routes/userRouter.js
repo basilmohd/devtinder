@@ -78,7 +78,7 @@ userRouter.get("/feed", authenticateUser, async (req, res) => {
         if (!feed || feed.length === 0) {
             return res.status(404).json({ message: "No users found for the feed." });
         }
-        res.status(200).json(feed);
+        res.status(200).json({data: feed});
 
     } catch (error) {
         console.error("Error fetching feed:", error);

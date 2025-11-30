@@ -30,10 +30,18 @@ const Navbar = () => {
     navigate('/profile');
   }
 
+  const gotoConnections = () => {
+    navigate('/connections');
+  }
+
+  const gotoRequests = () => {
+    navigate('/requests');
+  }
+
   return (
     <div className="navbar bg-neutral shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">👩‍💻Dev Tinder</a>
+        <a className="btn btn-ghost text-xl" onClick={()=>{navigate('/')}}>👩‍💻Dev Tinder</a>
       </div>
       <div className="flex gap-2">
         {user && (
@@ -58,7 +66,8 @@ const Navbar = () => {
                     <span className="badge">New</span>
                   </a>
                 </li>
-                <li><a>Settings</a></li>
+                <li><a onClick={gotoConnections}>Connections</a></li>
+                <li><a onClick={gotoRequests}>Requests</a></li>
                 <li><a onClick={logout}>Logout</a></li>
               </ul>
             </div>

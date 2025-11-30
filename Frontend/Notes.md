@@ -24,6 +24,15 @@
     - user feed page creation with user card
     - Edit profile page creation with side by side card display
 
+    - New Page -to show all connections
+    - New Page - to show all requests
+    - Implement reviewRequest api to accept or reject requests
+    - update state to remove request once accepted/rejected
+
+    - Implement Send/ignore connection request
+    - Implement Signup page
+    - E2E testing
+
 Body
   - Navbar
   - Route=/ => feed

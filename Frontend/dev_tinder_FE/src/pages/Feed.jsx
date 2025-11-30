@@ -29,6 +29,9 @@ const Feed = () => {
     getUserFeed();
   }, []);
 
+   if(!feedStore)   return;
+    if(feedStore.length === 0)   return <div className='flex justify-center mx-auto pt-10'>No Users found</div>
+
   return (
     feedStore && (
       <div className='flex justify-center my-10'>      

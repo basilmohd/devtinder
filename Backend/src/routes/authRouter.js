@@ -21,7 +21,7 @@ try {
     });
 
     user.save().then(() => {
-        res.status(201).json({ message: "User signed up successfully!" });
+        res.status(201).json({ message: "User signed up successfully!" , data: req.body});
       }).catch((error) => {
         console.error("Error signing up user:", error);
         res.status(500).json({ message: "Error signing up user."+error.message });

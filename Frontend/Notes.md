@@ -37,3 +37,40 @@ Body
   - Navbar
   - Route=/ => feed
   - Route=/login => login
+
+Deployment
+  - Signup on AWS , launch Ec2 instance and crete a new keyvalue pair. will get pem file
+  - chmod 400 devTinder.pem
+  - ssh -i "devTinder.pem" ubuntu@ec2-16-171-0-50.eu-north-1.compute.amazonaws.com
+  - FrontEnd
+    - install node and clone the project from github
+    - npm i && npm run build
+    - sudo apt update
+    - sudo apt install nginx
+    - sudo systemctl start nginx
+    - sudo systemctl enable nginx
+    - copy code from dist folder to root of nginx /var/www/html
+    - sudo scp -r dist/* /var/www/html/ 
+    - Enable port 80 on ec2 instance and allow all ips
+    - check from public IP and test if its working
+  
+  - Backend
+    - allowed ec2 instance public IP on mango server
+    - npm i pm2 -g
+    - pm2 start npm --name "devTinderBE" -- start
+    - pm2 logs
+    - pm2 list, pm2 flush <name> , 
+
+    FrontEnd => http://16.171.0.50/
+    Backend => http://16.171.0.50:3000/ => http://16.171.0.50/api
+
+    - nginx config 
+     - update nginx config to proxypass for /api
+     - sudo /etc/nginx/sites-available/ nano default
+      location /api/ {
+        proxy_pass http://localhost:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      }
+     - sudo systemctl restart nginx

@@ -9,3 +9,5 @@
 - building connection between 2 schemas (tables) using ref and populate
 - explore queries $nin $and $ne 
 - pagination - skip and limit
+
+- pm2 - process manager to run node application on the server continously in the background witout stopping

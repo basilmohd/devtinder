@@ -9,18 +9,18 @@ async function authenticateUser(req, res, next) {
     }
 
     try {
-        const decoded = await jwt.verify(token, "HelloNode@1234"); // Verify the token
+        const decoded = await jwt.verify(token, process.env.JWT_SECRET); // Verify the token
         console.log("Decoded token:", decoded); // Log the decoded token for debugging
-        const {_id} = decoded; // Extract user ID or other info from the decoded token
+        const { _id } = decoded; // Extract user ID or other info from the decoded token
         const user = await User.findById(_id); // Find user by ID from the token
-        if(!user) {
+        if (!user) {
             throw new Error("Invalid token");
         }
         req.user = user; // Attach user info to request object
         next(); // Proceed to the next middleware or route handler
     } catch (error) {
         console.error("Authentication error:", error); // Log the error for debugging
-        return res.status(403).json({ message: "Invalid token"+error.message });
+        return res.status(403).json({ message: "Invalid token" + error.message });
     }
 }
 

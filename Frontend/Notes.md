@@ -74,3 +74,25 @@ Deployment
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       }
      - sudo systemctl restart nginx
+
+# Adding a custom Domain name
+
+  - purchase domain from Godaddy (domain registrar) -> where domain is bought from
+  - signup on cloudflair and add the domain name
+  - change the nameserver on godaddy and point to cloudflair (nameserver is the one who manages the domain. so after shifting to cloudflair nameserver , cloudflair will be managing it)
+  - add the public ip of EC2 in the DNS records in A record
+  - enable SSL in cloudfront. for now keep flexible until in AWS also certs are updated. then can have full SSL
+  
+
+# Sending Email via SES
+  - Create an IAM user in AWS and assign permissions to it
+  - GIve access to it amazon SES Full access
+  - Create an identity in SES and verify it
+  - verify domain name and email address
+  - Install AWS SDK for NodeJS
+  - Configure AWS SDK with credentials
+  - Create a function to send email
+  https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/javascript_ses_code_examples.html
+  - Access credentials from AWS IAM user and add to .env file
+  - Write a function to send email  
+

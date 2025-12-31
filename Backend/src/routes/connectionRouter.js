@@ -1,10 +1,11 @@
 const connectionRouter = require("express").Router();
-const authenticateUser = require("../middleware/userAuth"); 
+const authenticateUser = require("../middleware/userAuth");
 const User = require("../models/User");
 const Connection = require("../models/Connections");
+const sendEmail = require("../utils/sendEmail");
 
 connectionRouter.post("/send/:status/:toUserId", authenticateUser, async (req, res) => {
-    try{
+    try {
         const toUserId = req.params.toUserId;
         const fromUserId = req.user._id; // Assuming the authenticated user's ID is stored in req.user
         const status = req.params.status; // 'interested' or 'notInterested'
@@ -28,20 +29,21 @@ connectionRouter.post("/send/:status/:toUserId", authenticateUser, async (req, r
 
         // Check if the connection already exists
         const existingConnection = await Connection.findOne({
-           $or: [{ fromUserId,toUserId},{fromUserId:toUserId,toUserId:fromUserId}]
+            $or: [{ fromUserId, toUserId }, { fromUserId: toUserId, toUserId: fromUserId }]
         });
 
-        if(existingConnection){
+        if (existingConnection) {
             return res.status(400).json({ message: "Connection request already exists." });
         }
 
         const connnectionData = new Connection({
-          fromUserId,
-          toUserId,
-          status,
+            fromUserId,
+            toUserId,
+            status,
         });
 
         const connection = await connnectionData.save();
+        const emailResponse = await sendEmail.run();
         console.log("Connection request sent:", connection);
 
         // Logic to handle the request based on status
@@ -74,7 +76,7 @@ connectionRouter.post("/received/:status/:requestId", authenticateUser, async (r
         const Allowed_Status = ["accepted", "rejected"];
         if (!Allowed_Status.includes(status)) {
             return res.status(400).json({ message: "Invalid status provided. Allowed statuses are 'accepted' or 'rejected'." });
-        }                
+        }
         const connectionRequest = await Connection.findById(requestId);
         if (!connectionRequest) {
             return res.status(404).json({ message: "Connection request not found." });
@@ -83,7 +85,7 @@ connectionRouter.post("/received/:status/:requestId", authenticateUser, async (r
         if (connectionRequest.toUserId.toString() !== user._id.toString()) {
             return res.status(403).json({ message: "You are not authorized to respond to this request." });
         }
-        if(connectionRequest.status != "interested") {
+        if (connectionRequest.status != "interested") {
             return res.status(400).json({ message: "Connection request has already been acted upon." });
         }
 
